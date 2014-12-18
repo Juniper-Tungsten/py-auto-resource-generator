@@ -1,4 +1,41 @@
 py-auto-resource-genrator
-=========================
+==========================
+Puppet and chef data-model generator for Yang model.
 
-Python library for conversion of standardiszed Yang data model to IT automation tool data model for Puppet, Chef, Ansible
+
+Overview
+=========
+Python library for conversion of standardized Yang data model to IT automation tool data model for Puppet and Chef.
+The intial version of library will support conversion from Yang model to Puppet resource type, support for Chef and Ansible will be added in future.
+
+Getting started
+================
+Make sure to install pyang and lxml.
+Install lxml
+```
+pip install lxml
+```
+
+Install pyang  
+```
+pip install pyang
+```
+Add puppet.py in plugin directory of pyang installation.
+
+For instruction on using pyang refer
+[pyang](http://www.yang-central.org/twiki/pub/Main/YangTools/pyang.1.html)
+
+Below is the sample command to genereate interface Puppet resource type from interfaces Yang model
+```
+$pyang -f puppet --puppet-output /usr/tmp ietf-interfaces.yang
+```
+Puppet resource types file will be created in 'type' folder in destination path mentioned in command after '--puppet-output', if destination path is not give the 'type' folder will be created in current working directory.
+
+
+LICENSE
+========
+Apache 2.0
+
+CONTRIBUTORS
+=============
+* Ganesh Nalawade (@ganesh634)
