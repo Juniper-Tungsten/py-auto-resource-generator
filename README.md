@@ -1,4 +1,4 @@
-py-auto-resource-genrator
+py-auto-resource-generator
 ==========================
 Puppet and chef data-model generator for Yang model.
 
@@ -6,7 +6,8 @@ Puppet and chef data-model generator for Yang model.
 Overview
 =========
 Python library for conversion of standardized Yang data model to IT automation tool data model for Puppet and Chef.
-The intial version of library will support conversion from Yang model to Puppet resource type, support for Chef and Ansible will be added in future.
+The library is in initial phase of development and currently support conversion from Yang model to Puppet resource type, 
+support for Chef will be added in future.
 
 Getting started
 ================
