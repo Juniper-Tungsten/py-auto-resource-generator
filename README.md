@@ -1,6 +1,6 @@
 py-auto-resource-generator
 ==========================
-Puppet and chef data-model generator for Yang model.
+Puppet and chef data-model generator from Yang model.
 
 
 Overview
