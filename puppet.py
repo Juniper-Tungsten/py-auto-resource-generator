@@ -1,8 +1,5 @@
 """Puppet output plugin"""
 
-from xml.sax.saxutils import quoteattr
-from xml.sax.saxutils import escape
-
 import os
 import sys
 import optparse
