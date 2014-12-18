@@ -26,7 +26,7 @@ Add puppet.py in plugin directory of pyang installation.
 For instruction on using pyang refer
 [pyang](http://www.yang-central.org/twiki/pub/Main/YangTools/pyang.1.html)
 
-Below is the sample command to genereate interface Puppet resource type from interfaces Yang model
+Below is the command to generate interface Puppet resource type from interface Yang model
 ```
 $pyang -f puppet --puppet-output /usr/tmp ietf-interfaces.yang
 ```
