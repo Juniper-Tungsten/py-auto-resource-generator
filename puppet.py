@@ -179,7 +179,7 @@ yang_types = {
     'string'      : get_string
 }
 
-def yangtype_to_puppettype(typelist, prefix_dict, typeelement, fd):
+def yangtype_to_puppetvalues(typelist, prefix_dict, typeelement, fd):
     if len(typelist) > 1:
         if typelist[0] in prefix_dict.keys():
             root = prefix_dict[typelist[0]]
@@ -188,7 +188,7 @@ def yangtype_to_puppettype(typelist, prefix_dict, typeelement, fd):
                     typeelement = ele.find('{' + yin.yin_namespace + '}' + 'type')
                     typeval = typeelement.attrib['name'].split(':')
                     if len(typeval) > 1:
-                        yangtype_to_puppettype(typeval, prefix_dict, fd)
+                        yangtype_to_puppetvalues(typeval, prefix_dict, fd)
                     else:
                         try:
                             yang_types[typeelement.attrib['name']](typeelement, fd)
@@ -209,7 +209,7 @@ def create_resource_value(leafstmt, prefix_dict, fd):
             typelist = ele.attrib['name'].split(':')
 
             #Type defination has a prefix
-            yangtype_to_puppettype(typelist, prefix_dict, ele, fd)
+            yangtype_to_puppetvalues(typelist, prefix_dict, ele, fd)
 
 
     return
