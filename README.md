@@ -30,7 +30,7 @@ Below is the command to generate interface Puppet resource type from interface Y
 ```
 $pyang -f puppet --puppet-output /usr/tmp ietf-interfaces.yang
 ```
-Puppet resource types file will be created in 'type' folder in destination path mentioned in command after '--puppet-output', if destination path is not give the 'type' folder will be created in current working directory.
+Puppet resource types file will be created in 'puppet-types' folder in destination path mentioned in command after '--puppet-output', if destination path is not give the 'puppet-types' folder will be created in current working directory.
 
 
 LICENSE
