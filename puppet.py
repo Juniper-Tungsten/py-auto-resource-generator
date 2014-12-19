@@ -4,8 +4,8 @@ import os
 import sys
 import optparse
 import re
-from lxml import etree, objectify
 
+from lxml import etree, objectify
 from pyang import plugin
 from pyang import translators
 from pyang import statements
@@ -18,7 +18,6 @@ module_import = ['import', 'include']
 
 yangelement_stmts = ['container', 'list']
 """Keywords of statements that YangElement classes are generated from"""
-
 
 leaf_stmts = ['leaf', 'leaf-list']
 """Leaf and leaf-list statement keywords"""
@@ -34,7 +33,6 @@ class PuppetPlugin(plugin.PyangPlugin):
     def add_output_format(self, fmts):
         self.multiple_modules = False
         fmts['puppet'] = self
-
         args = sys.argv[1:]
         if not any(x in args for x in ('-f', '--format')):
             if any(x in args for x in ('-d', '--puppet-output')):
@@ -54,9 +52,7 @@ class PuppetPlugin(plugin.PyangPlugin):
         g = optparser.add_option_group('Puppet output specific options')
         g.add_options(optlist)
 
-
     def setup_ctx(self, ctx):
-
         if ctx.opts.format == 'puppet':
             if not ctx.opts.directory:
                 ctx.opts.directory = os.getcwd()
@@ -66,9 +62,7 @@ class PuppetPlugin(plugin.PyangPlugin):
     def setup_fmt(self, ctx):
         pass
 
-
     def emit(self, ctx, modules, fd):
-
         module = modules[0]
         root = yang_to_xml(ctx, module)
         ctx.path = os.path.join(ctx.opts.directory , 'puppet_types')
@@ -78,11 +72,9 @@ class PuppetPlugin(plugin.PyangPlugin):
 
         for module in root.xpath('/t:module', namespaces={'t': yin.yin_namespace}):
             containers = etree.XPath('//t:container',namespaces={'t': yin.yin_namespace})
-
             for container in containers(module):
                 if is_configurable(container):
                     emit_puppet(ctx, module, root, container, fd)
-
         return
 
 def yang_to_xml(ctx, module):
@@ -103,7 +95,6 @@ def ext_module_yang_to_xml(ctx, root, module, yangsearchlist):
         extmodule = statements.Statement(module, module, None, 'import', yangextmod.attrib['module'])
         mod = ctx.get_module(extmodule.arg, None)
         extrootlist.append(yang_to_xml(ctx, mod))
-
     return extrootlist
 
 def is_configurable(element):
@@ -153,11 +144,9 @@ def default(func):
 def get_string(typeelement, fd):
     pass
 
-
 @default
 def get_unsignedint(typeelement, fd):
     fd.write('    munge { |v| Integer( v ) }\n')
-
 
 @default
 def get_enum(typeelement, fd):
@@ -169,7 +158,6 @@ def get_enum(typeelement, fd):
 @default
 def get_boolean(typeelement, fd):
     fd.write('    newvalues( true, false )\n')
-
 
 yang_types = {
     'enumeration' : get_enum,
@@ -194,7 +182,6 @@ def yangtype_to_puppetvalues(typelist, prefix_dict, typeelement, fd):
                             yang_types[typeelement.attrib['name']](typeelement, fd)
                         except KeyError:
                             pass
-
     else:
         try:
             yang_types[typeelement.attrib['name']](typeelement, fd)
@@ -207,11 +194,8 @@ def create_resource_value(leafstmt, prefix_dict, fd):
         if 'name' in ele.attrib.keys():
             #fd.write('  newvalues( :'+ele.attrib['name']+' )\n')
             typelist = ele.attrib['name'].split(':')
-
             #Type defination has a prefix
             yangtype_to_puppetvalues(typelist, prefix_dict, ele, fd)
-
-
     return
 
 def create_resource_description(element, fd):
@@ -219,7 +203,6 @@ def create_resource_description(element, fd):
         desc = ele.getchildren()[0].text.split('.')[0]
         fd.write('    desc \"'+desc.replace('\n', '')+ '\"\n')
     return
-
 
 def create_resource_property(yangstmt, prefix_dict, fd):
     keys = []
@@ -237,11 +220,9 @@ def create_resource_property(yangstmt, prefix_dict, fd):
                 else:
                     if 'name' in leafstmt.attrib.keys():
                         fd.write('  newproperty( :'+leafstmt.attrib['name']+' ) do\n')
-
                 create_resource_description(leafstmt, fd)
                 create_resource_value(leafstmt, prefix_dict, fd)
                 fd.write('  end\n\n')
-
     return
 
 def create_resource_type(container, element, fd):
@@ -252,7 +233,6 @@ def create_resource_type(container, element, fd):
                                      namespaces={'t': yin.yin_namespace})[0].text + '\n')
     fd.write('  ensurable\n')
     fd.write('  feature :activable, \"The ability to activate/deactive configuration\"\n\n')
-
     return
 
 
@@ -260,7 +240,6 @@ def create_resource_header(container, fd):
     pass
 
 def emit_puppet(ctx, module, root, container, fd):
-
     importroots = ext_module_yang_to_xml(ctx, root, module, ['import'])
     prefix_dict = {}
 
@@ -269,32 +248,16 @@ def emit_puppet(ctx, module, root, container, fd):
             for ele in module.findall('{' + yin.yin_namespace + '}' + 'prefix'):
                 #if re.sub('{.*?}', '', ele.tag ) == 'prefix':
                 prefix_dict[ele.attrib['value']] = rootnode
-
     yangstmts = search(container, yangelement_stmts)
-
     for yangstmt in yangstmts:
         restypename = get_resource_name(container,yangstmt )
         path = os.path.join(ctx.path , 'netdev_' + '_'.join(restypename) + '.rb')
         if os.path.isfile(path):
             os.remove(path)
         fd_res = open(path, 'w+')
-
         create_resource_header(container, fd_res)
         create_resource_type(container, yangstmt, fd_res)
         create_resource_property(yangstmt, prefix_dict, fd_res)
-
         fd_res.write('end\n\n')
         fd_res.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return
