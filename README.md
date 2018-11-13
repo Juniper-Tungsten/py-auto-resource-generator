@@ -2,6 +2,7 @@ py-auto-resource-generator
 ==========================
 Puppet and chef data-model generator from Yang model.
 
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-yellow.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
 Overview
 =========
